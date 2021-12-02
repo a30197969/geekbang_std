@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import (
+	_ "imooc/routers"
+	beego "github.com/beego/beego/v2/server/web"
+)
 
 func main() {
-	fmt.Println("Hello World!")
+	beego.Run()
 }
+
