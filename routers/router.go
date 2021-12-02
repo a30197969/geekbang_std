@@ -1,10 +1,10 @@
 package routers
 
 import (
-	"imooc/controllers"
 	beego "github.com/beego/beego/v2/server/web"
+	"imooc/controllers"
 )
 
 func init() {
-    beego.Router("/", &controllers.MainController{})
+	beego.Router("/", &controllers.MainController{})
 }
