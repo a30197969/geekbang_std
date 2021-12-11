@@ -19,7 +19,10 @@ type AlbumData struct {
 // 毛剑老师第二周作业：我们在数据库操作的时候，比如 dao 层中当遇到一个 sql.ErrNoRows 的时候，是否应该 Wrap 这个 error，抛给上层。为什么，应该怎么做请写出代码？
 // 答：不应该Wrap这个error，因为sql.ErrNoRows是数据库执行QueryRow查询的时候结果为空返回的，是Go定义的一个特殊的常量，这需要作为特殊情况处理，不能将该空结果作为错误，在判断中应该检查错误是否为这个特殊常量，不是才可以Wrap这个错误
 // 代码如下，查询 `album` 表中是否有 id = 12 的数据，如果该行不存在，则需要特殊处理sql.ErrNoRows
-// 返回结果：{id:12 title:王者的风范 description:摄于曲靖 userid:15 dateline:2021-06-04 10:37:19},<nil>
+// 正确的返回结果：{id:12 title:王者的风范 description:摄于曲靖 userid:15 dateline:2021-06-04 10:37:19},<nil>
+// 无数据返回结果：sql: no rows in result set    error_test.go:9: {id:0 title: description: userid:0 dateline:},<nil>
+// 错误的查询结果：查询 fn_bird.album 表报错: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'id=2 limit 1' at line 1
+
 func GetQueryRow(id int) (AlbumData, error) {
 	var (
 		db        *sql.DB

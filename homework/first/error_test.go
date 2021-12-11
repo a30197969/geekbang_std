@@ -5,6 +5,7 @@ import (
 )
 
 func TestQueryRow(t *testing.T) {
-	row, err := GetQueryRow(12)
-	t.Logf("%+v,%+v\n", row, err)
+	row, err := GetQueryRow(1223131)
+	t.Logf("%+v\n", row)
+	t.Logf("%+v\n", err)
 }
