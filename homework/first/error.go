@@ -29,7 +29,6 @@ func GetQueryRow(id int) (AlbumData, error) {
 		err       error
 		albumData AlbumData
 	)
-
 	db, err = sql.Open("mysql", "fengniao:fengniao123@tcp(172.16.151.61:3306)/fn_bird")
 	if err != nil {
 		return albumData, errors.Wrap(err, "连接 fn_bird 库报错")
