@@ -51,7 +51,7 @@ func TestMutex(t *testing.T) {
 			sendCond.Signal()
 		}
 	}(max)
-	// 利用chan 阻塞主线程以使goroutine完全跑完
+	// 利用chan阻塞主线程以使goroutine完全跑完，接收操作在完全完成之前会被阻塞
 	<-sign
 	<-sign
 }
