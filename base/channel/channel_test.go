@@ -2,7 +2,9 @@ package channel
 
 import (
 	"fmt"
+	"math/rand"
 	"testing"
+	"time"
 )
 
 func TestChannel(t *testing.T) {
@@ -31,6 +33,7 @@ func TestChannel(t *testing.T) {
 
 func TestChannel2(t *testing.T) {
 	intChan := getIntChan()
+	fmt.Printf("%#v\n", intChan)
 	// 带有range子句的for语句
 	for elem := range intChan {
 		fmt.Printf("%+v\n", elem)
@@ -46,4 +49,41 @@ func getIntChan() <-chan int {
 	}
 	close(ch)
 	return ch
+}
+
+func TestSelectChannel(t *testing.T) {
+	intChannels := [3]chan int{
+		make(chan int, 1),
+		make(chan int, 1),
+		make(chan int, 1),
+	}
+	fmt.Printf("%#v\n", intChannels)
+	index := rand.Intn(3)
+	fmt.Printf("%v\n", index)
+	intChannels[index] <- index
+	select {
+	case <-intChannels[0]:
+		fmt.Println("The first candidate case is selected.")
+	case <-intChannels[1]:
+		fmt.Println("The second candidate case is selected.")
+	case elem := <-intChannels[2]:
+		fmt.Printf("The third candidate case is selected, the element is %d.\n", elem)
+	default:
+		fmt.Println("No candidate case is selected!")
+	}
+}
+func TestSelectChannelBreak(t *testing.T) {
+	intChan := make(chan int, 1)
+	// 一秒后关闭通道。
+	time.AfterFunc(time.Second, func() {
+		close(intChan)
+	})
+	select {
+	case _, ok := <-intChan:
+		if !ok {
+			fmt.Println("The candidate case is closed.")
+			break
+		}
+		fmt.Println("The candidate case is selected.")
+	}
 }
