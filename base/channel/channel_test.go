@@ -78,6 +78,7 @@ func TestSelectChannelBreak(t *testing.T) {
 	time.AfterFunc(time.Second, func() {
 		close(intChan)
 	})
+
 	select {
 	case _, ok := <-intChan:
 		if !ok {
