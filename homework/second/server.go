@@ -3,55 +3,58 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/pkg/errors"
 	"golang.org/x/sync/errgroup"
+	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"syscall"
 )
 
+// 毛剑老师第三周作业：基于 errgroup 实现一个 http server 的启动和关闭，以及 linux signal 信号的注册和处理，要保证能够一个退出，全部注销退出。
+// errgroup：只要一个 goroutine 出错我们就不再等其他 goroutine 了，减少资源浪费。
 func main() {
-	ctx, cancel := context.WithCancel(context.Background())
-	//ctx, cancel := context.WithTimeout(context.Background(), time.Second*20)
-	g, errCtx := errgroup.WithContext(ctx)
+	g, ctx := errgroup.WithContext(context.Background())
 	var (
 		addr1 = "127.0.0.1:8001"
 		addr2 = "127.0.0.1:8002"
 	)
-	// 端口8001启动
+	// g1 端口8001启动
 	g.Go(func() error {
 		mux1 := http.NewServeMux()
 		mux1.HandleFunc("/test1", Test1)
 		mux1.HandleFunc("/test2", Test2)
 		mux1.HandleFunc("/test3", Test3)
-		return StartServer(errCtx, addr1, mux1)
+		return StartServer(ctx, addr1, mux1)
 	})
-	// 端口8002启动
+	// g2 端口8002启动
 	g.Go(func() error {
 		mux2 := http.NewServeMux()
 		mux2.HandleFunc("/test4", Test4)
 		mux2.HandleFunc("/test5", Test5)
 		mux2.HandleFunc("/test6", Test6)
-		return StartServer(errCtx, addr2, mux2)
+		return StartServer(ctx, addr2, mux2)
 
 	})
-	chanel := make(chan os.Signal, 1) //这里要用 buffer 为1的 chan
-	signal.Notify(chanel)
+	// g3 接收信号退出
 	g.Go(func() error {
-		for {
-			select {
-			case <-errCtx.Done(): // 因为 cancel、timeout、deadline 都可能导致 Done 被 close
-				return errCtx.Err()
-			case <-chanel: // 因为 kill -9 或其他而终止
-				cancel()
-			}
+		stopChannel := make(chan os.Signal, 1)
+		// SIGHUP 终止进程 终端线路挂断
+		// SIGINT 终止进程 中断进程 Control-C (SIGINT)
+		// SIGTERM 终止进程 软件终止信号
+		signal.Notify(stopChannel, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM) // 用来监听收到的信号
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		case sig := <-stopChannel: // 接收终止信号，g3退出，cancel取消，context不再阻塞，g2、g1退出
+			return errors.Errorf("get os signal: %v", sig)
 		}
-		return nil
 	})
-
 	if err := g.Wait(); err != nil {
-		fmt.Println(err)
+		log.Printf("errgroup exiting: %+v", err)
 	} else {
-		fmt.Println("all group done!")
+		log.Println("all group done!")
 	}
 }
 
@@ -78,11 +81,12 @@ func StartServer(ctx context.Context, addr string, handler http.Handler) error {
 		Addr:    addr,
 		Handler: handler,
 	}
+	// context收到取消信号，g1、g2退出，context不再阻塞，g3退出
 	go func() {
 		<-ctx.Done()
-		fmt.Printf("%s stop\n", addr)
+		log.Printf("server %s stop\n", addr)
 		s.Shutdown(ctx)
 	}()
-	fmt.Printf("%s start\n", addr)
+	log.Printf("server %s start\n", addr)
 	return s.ListenAndServe()
 }

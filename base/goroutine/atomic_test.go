@@ -42,3 +42,13 @@ func TestGoroutine(t *testing.T) {
 	wg.Wait()
 
 }
+
+func TestStore(t *testing.T) {
+	var v atomic.Value
+	v.Store("111")
+	v.Store("222")
+	v.Store("333")
+	t.Log(v.Load().(string))
+	t.Log(v.Load().(string))
+	t.Log(v.Load().(string))
+}
