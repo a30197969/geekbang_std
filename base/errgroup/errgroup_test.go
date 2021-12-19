@@ -30,17 +30,18 @@ func TestGoroutine(t *testing.T) {
 	}
 	wg.Wait()
 }
+
 func TestErrgroup(t *testing.T) {
 	eg := new(errgroup.Group)
 	for _, url := range urls {
-		url := url
+		tmpUrl := url // 防止goroutine中访问到的是同一个变量
 		eg.Go(func() error {
-			resp, err := http.Get(url)
+			resp, err := http.Get(tmpUrl)
 			if err != nil {
 				fmt.Println(err)
 				return err
 			}
-			fmt.Printf("get [%s] success: [%d] \n", url, resp.StatusCode)
+			fmt.Printf("get [%s] success: [%d] \n", tmpUrl, resp.StatusCode)
 			return resp.Body.Close()
 		})
 	}
