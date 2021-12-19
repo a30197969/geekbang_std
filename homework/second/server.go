@@ -22,6 +22,7 @@ func main() {
 	)
 	// g1 端口8001启动
 	g.Go(func() error {
+		// 创建ServeMux对象，防止使用DefaultServeMux默认对象
 		mux1 := http.NewServeMux()
 		mux1.HandleFunc("/test1", Test1)
 		mux1.HandleFunc("/test2", Test2)
@@ -77,6 +78,7 @@ func Test6(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Test 6666666")
 }
 func StartServer(ctx context.Context, addr string, handler http.Handler) error {
+	// 创建http.Server对象定制参数
 	s := &http.Server{
 		Addr:    addr,
 		Handler: handler,
