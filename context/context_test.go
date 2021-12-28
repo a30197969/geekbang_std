@@ -26,8 +26,10 @@ func TestContextWithCancel(t *testing.T) {
 }
 func TestContextWithTimeout(t *testing.T) {
 	// 创建一个子节点的context，超时时间为5秒
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	fmt.Println(time.Now())
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*2)
 	fmt.Println(ctx)
+	fmt.Println(ctx.Deadline())
 	cancel()
 }
 func TestContextWithDeadline(t *testing.T) {
