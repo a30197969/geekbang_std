@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"time"
 )
 
 var myname string
@@ -25,4 +26,8 @@ func main() {
 	Hello(os.Stdout, myname)
 	fmt.Printf("我的年龄是：%d！\n", myage)
 	fmt.Println(os.Args)
+
+	t := time.Now()
+	str := t.Format("2006-01-02 15:04:05")
+	fmt.Println(str)
 }
