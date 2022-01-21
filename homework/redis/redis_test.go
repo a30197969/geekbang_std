@@ -60,6 +60,7 @@ func initRedisClient() (err error) {
 	return nil
 }
 
+// 分别写入不同大小的，不同数量的数据，完成后分别使用redis-cli命令，info查看memory的信息
 func TestRedis(t *testing.T) {
 	err := initRedisClient()
 	if err != nil {
