@@ -65,7 +65,6 @@ func TestRedis(t *testing.T) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-
 	set(10000, "1w", generateValue(10))
 	set(10000, "1w", generateValue(100))
 	set(10000, "1w", generateValue(1000))
@@ -77,6 +76,8 @@ func TestRedis(t *testing.T) {
 	set(100000, "10w", generateValue(10))
 	set(100000, "10w", generateValue(100))
 	set(100000, "10w", generateValue(1000))
+
+	// 执行完成后，命令行观察 redis-cli 的 memory 信息
 }
 
 func set(num int, key string, value string) {
