@@ -3,6 +3,8 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"geekbang_study/homework/network/proto"
+	"io"
 	"net"
 )
 
@@ -24,17 +26,18 @@ func main() {
 }
 func process(conn net.Conn) {
 	defer conn.Close() // 关闭连接
+	reader := bufio.NewReader(conn)
 	for {
-		reader := bufio.NewReader(conn)
-		var buf [128]byte
-		n, err := reader.Read(buf[:]) // 读取数据
+		msg, err := proto.Decode(reader)
+		if err == io.EOF {
+			return
+		}
 		if err != nil {
-			fmt.Println("read from client failed, err:", err)
+			fmt.Println("decode msg failed, err:", err)
 			break
 		}
-		recvStr := string(buf[:n])
-		fmt.Println("收到cient端发来的数据：", recvStr)
-		conn.Write([]byte(recvStr)) // 发送数据
+		fmt.Println("收到cient端发来的数据：", msg)
+		conn.Write([]byte(msg)) // 发送数据
 	}
 
 }
