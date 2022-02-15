@@ -92,4 +92,3 @@ func TestStruct3(t *testing.T) {
 	fmt.Printf("%#v\n", u)
 	fmt.Printf("%#v\n", u.Address)
 }
-
