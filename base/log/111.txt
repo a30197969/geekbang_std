@@ -1,0 +1,4 @@
+[前缀信息]2022/02/17 17:45:36.119311 D:/GoPath/src/geekbang_study/base/log/log_test.go:25: 这是一条很普通的日志。
+[前缀信息]2022/02/17 17:47:44 D:/GoPath/src/geekbang_study/base/log/log_test.go:26: 这是一条很普通的日志。
+[前缀信息]2022/02/17 17:48:53 D:/GoPath/src/geekbang_study/base/log/log_test.go:26: 这是一条很普通的日志。
+[前缀信息]2022/02/17 17:50:02 D:/GoPath/src/geekbang_study/base/log/log_test.go:27: 这是一条很普通的日志。

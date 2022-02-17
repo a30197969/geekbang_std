@@ -37,6 +37,24 @@ func TestTime3(t *testing.T) {
 	fmt.Println(timeobj.Unix())
 }
 
+func TestTime33(t *testing.T) {
+	dateStr := "2018-09-18 04:14:56"
+	tmp := "2006-01-02 15:04:05"
+	timeobj, _ := time.Parse(tmp, dateStr)
+	fmt.Println(timeobj)
+}
+
+func TestTime333(t *testing.T) {
+	dateStr := "2022-02-17 16:14:56"
+	tmp := "2006-01-02 15:04:05"
+	loc, _ := time.LoadLocation("Asia/Shanghai")
+	// loc := time.Local
+	fmt.Println(loc)
+	timeobj, _ := time.ParseInLocation(tmp, dateStr, loc)
+	fmt.Println(timeobj)
+	fmt.Println(time.Now().Sub(timeobj))
+}
+
 // 时间单位
 func TestTime4(t *testing.T) {
 	fmt.Println(time.Second)
