@@ -13,5 +13,4 @@ func TestRand(t *testing.T) {
 	fmt.Println(rand.Int31n(99999))  // 前闭后开区间 0-取
 	fmt.Println(rand.Float32())      // 前闭后开区间 0-1取
 	fmt.Println(rand.Float64())      // 前闭后开区间 0-1取
-
 }
