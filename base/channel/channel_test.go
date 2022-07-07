@@ -126,6 +126,12 @@ func TestChannel4(t *testing.T) {
 	index := rand.Intn(3)
 	fmt.Printf("The index：%d\n", index)
 	intChannels[index] <- index
+
+	// 一秒后关闭通道
+	time.AfterFunc(time.Second, func() {
+		close(intChannels[index])
+	})
+
 	select {
 	case <-intChannels[0]:
 		fmt.Println("The first candidate case is selected.")
@@ -135,6 +141,23 @@ func TestChannel4(t *testing.T) {
 		fmt.Printf("The third candidate case is selected, the element is %d.\n", elem)
 	default:
 		fmt.Println("No candidate case is selected!")
+	}
+
+}
+func TestChannel5(t *testing.T) {
+	ch1 := make(chan int, 1)
+	time.AfterFunc(time.Second, func() {
+		close(ch1)
+	})
+	select {
+	case _, ok := <-ch1:
+		t.Log(ok)
+		if !ok {
+			t.Logf("The candidate case is closed.")
+			break
+		} else {
+			t.Logf("The candidate case is selected.")
+		}
 	}
 
 }
