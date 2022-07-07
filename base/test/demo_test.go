@@ -6,6 +6,14 @@ import (
 )
 
 // goto 用法
+func TestDemo0(t *testing.T) {
+	container := []string{"zero", "one", "two"}
+	fmt.Printf("The element is %q.\n", container[1])
+	value, ok := interface{}(container).([]string)
+	t.Log(value, ok)
+}
+
+// goto 用法
 func TestDemo1(t *testing.T) {
 	n := 30
 	if n > 20 {

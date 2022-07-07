@@ -29,10 +29,10 @@ func TestTime2(t *testing.T) {
 func TestTime3(t *testing.T) {
 	dateStr := "2018-09-18 04:14:56"
 	tmp := "2006-01-02 15:04:05"
-	loc, _ := time.LoadLocation("Asia/Shanghai")
+	loc, _ := time.LoadLocation("Asia/Shanghai") // 设置时区
 	// loc := time.Local
 	fmt.Println(loc)
-	timeobj, _ := time.ParseInLocation(tmp, dateStr, loc)
+	timeobj, _ := time.ParseInLocation(tmp, dateStr, loc) // 2006-01-02 15:04:05是转换的格式，如php的"Y-m-d H:i:s"
 	fmt.Println(timeobj)
 	fmt.Println(timeobj.Unix())
 }
@@ -53,6 +53,9 @@ func TestTime333(t *testing.T) {
 	timeobj, _ := time.ParseInLocation(tmp, dateStr, loc)
 	fmt.Println(timeobj)
 	fmt.Println(time.Now().Sub(timeobj))
+
+	ttt := time.Now()
+	fmt.Println(ttt.Unix() - timeobj.Unix())
 }
 
 // 时间单位

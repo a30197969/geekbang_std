@@ -33,6 +33,7 @@ func TestChannel(t *testing.T) {
 
 func TestChannel2(t *testing.T) {
 	intChan := getIntChan()
+	fmt.Printf("%+v\n", intChan)
 	fmt.Printf("%#v\n", intChan)
 	// 带有range子句的for语句
 	for elem := range intChan {
@@ -87,4 +88,53 @@ func TestSelectChannelBreak(t *testing.T) {
 		}
 		fmt.Println("The candidate case is selected.")
 	}
+}
+
+func TestChannel3(t *testing.T) {
+	//ch1 := make(chan int, 1)
+	//ch1 <- 1
+	//ch1 <- 2
+
+	//ch2 := make(chan int, 1)
+	//elem, ok := <-ch2
+	//t.Log(elem, ok)
+
+	var ch3 chan int
+	_ = ch3
+	r := rand.Intn(1000)
+	t.Log(r)
+}
+
+type Notifier interface {
+	SendInt(ch chan<- int)
+}
+
+func TestChannel4(t *testing.T) {
+
+	fmt.Println(time.Now())
+
+	rand.Seed(68)
+	fmt.Println(rand.Intn(100))
+	fmt.Println(rand.Intn(100))
+	fmt.Println(rand.Intn(100))
+
+	intChannels := [3]chan int{
+		make(chan int, 1),
+		make(chan int, 1),
+		make(chan int, 1),
+	}
+	index := rand.Intn(3)
+	fmt.Printf("The index：%d\n", index)
+	intChannels[index] <- index
+	select {
+	case <-intChannels[0]:
+		fmt.Println("The first candidate case is selected.")
+	case <-intChannels[1]:
+		fmt.Println("The second candidate case is selected.")
+	case elem := <-intChannels[2]:
+		fmt.Printf("The third candidate case is selected, the element is %d.\n", elem)
+	default:
+		fmt.Println("No candidate case is selected!")
+	}
+
 }
