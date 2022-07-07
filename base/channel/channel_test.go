@@ -159,5 +159,4 @@ func TestChannel5(t *testing.T) {
 			t.Logf("The candidate case is selected.")
 		}
 	}
-
 }
